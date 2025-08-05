@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from datetime import datetime
 
 from ..database import get_db
 from .. import models, schemas
+from ..crawler.crawl_job import run_crawl_job
 
 router = APIRouter(prefix="/sites", tags=["sites"])
 
@@ -27,7 +28,7 @@ async def list_sites(db: AsyncSession = Depends(get_db)):
     return sites
 
 @router.post("/{site_id}/crawl", response_model=schemas.CrawlJobRead, status_code=status.HTTP_202_ACCEPTED)
-async def start_crawl(site_id: int, crawl_in: schemas.CrawlJobCreate, db: AsyncSession = Depends(get_db)):
+async def start_crawl(site_id: int, crawl_in: schemas.CrawlJobCreate, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
     site = await db.get(models.Site, site_id)
     if not site:
         raise HTTPException(status_code=404, detail="Site not found")
@@ -36,7 +37,8 @@ async def start_crawl(site_id: int, crawl_in: schemas.CrawlJobCreate, db: AsyncS
     await db.commit()
     await db.refresh(job)
 
-    # TODO: enqueue crawl worker task
+    # schedule async crawl
+    background_tasks.add_task(run_crawl_job, job.id, site.domain, crawl_in.depth)
     return job
 
 @router.get("/{site_id}/pages", response_model=list[schemas.PageRead])

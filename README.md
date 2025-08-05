@@ -22,6 +22,8 @@ API will be available at http://localhost:8000 (see `/docs` for Swagger UI).
 
 Database connection string defaults to `postgresql+asyncpg://postgres:postgres@localhost:5432/geo`.
 
+Frontend is served at http://localhost:3000.
+
 ## Development
 
 Back-end live reload enabled through `--reload` in docker-compose.
