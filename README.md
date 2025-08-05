@@ -33,3 +33,5 @@ Create a site:
 ```bash
 curl -X POST http://localhost:8000/sites -H 'Content-Type: application/json' -d '{"domain": "example.com"}'
 ```
+
+- LLMS.txt versions endpoint at `/sites/{id}/llms`.

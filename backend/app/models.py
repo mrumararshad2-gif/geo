@@ -21,6 +21,7 @@ class Site(Base):
 
     pages = relationship("Page", back_populates="site", cascade="all, delete-orphan")
     crawl_jobs = relationship("CrawlJob", back_populates="site", cascade="all, delete-orphan")
+    llms_versions = relationship("LlmsVersion", back_populates="site", cascade="all, delete-orphan")
 
 
 class Page(Base):
@@ -47,3 +48,15 @@ class CrawlJob(Base):
     finished_at = Column(DateTime)
 
     site = relationship("Site", back_populates="crawl_jobs")
+
+
+class LlmsVersion(Base):
+    __tablename__ = "llms_version"
+
+    id = Column(Integer, primary_key=True, index=True)
+    site_id = Column(Integer, ForeignKey("site.id", ondelete="CASCADE"))
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    created_by = Column(String)
+
+    site = relationship("Site", back_populates="llms_versions")

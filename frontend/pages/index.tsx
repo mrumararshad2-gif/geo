@@ -1,5 +1,6 @@
 import useSWR from 'swr'
 import { useState } from 'react'
+import Link from 'next/link'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -35,7 +36,7 @@ export default function Home() {
       <ul>
         {sites?.map((s: any) => (
           <li key={s.id}>
-            {s.domain} <button onClick={() => crawlSite(s.id)}>Crawl</button>
+            <Link href={`/sites/${s.id}`}>{s.domain}</Link> <button onClick={() => crawlSite(s.id)}>Crawl</button>
           </li>
         ))}
       </ul>
