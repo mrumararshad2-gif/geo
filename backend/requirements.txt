@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy>=2.0
+asyncpg
+psycopg2-binary
+pydantic
+alembic
+python-dotenv
+
+# crawler
+aiohttp
+beautifulsoup4
