@@ -41,3 +41,16 @@ class PageRead(BaseModel):
 
     class Config:
         orm_mode = True
+
+class LlmsVersionCreate(BaseModel):
+    content: str
+    created_by: str | None = None
+
+class LlmsVersionRead(BaseModel):
+    id: int
+    content: str
+    created_at: datetime
+    created_by: str | None = None
+
+    class Config:
+        orm_mode = True
